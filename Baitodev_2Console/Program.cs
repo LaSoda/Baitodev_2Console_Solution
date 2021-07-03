@@ -33,9 +33,12 @@ namespace Baitodev_2Console
                 {
                     var response = await http.GetStringAsync(WorldUrl);
                     var WorlGet = JsonConvert.DeserializeObject<List<SelectedWord>>(response);
+                    char[] GameWorl = new char[0];
+                    int WinersMove = 0;
+
                     foreach (var p in WorlGet)
                     {
-                        char[] GameWorl = new char[p.wordLenght];
+                        GameWorl = new char[p.wordLenght];
                         for (int i = 0; i < p.wordLenght; i++)
                         {
                             GameWorl[i] = ('_');
@@ -45,9 +48,8 @@ namespace Baitodev_2Console
 
                     while (attempts != 0)
                     {
-                        if (attempts == 0) { Console.WriteLine("you lose!"); break;  } 
                         String Move = Console.ReadLine();
-                        attempts--;
+                        
                         var ResultUrl = ($"{WorldUrl}/{Move}");
                         using (var httpGame = new HttpClient())
                         {
@@ -60,18 +62,27 @@ namespace Baitodev_2Console
                                 {
                                     if (G.isCorrect)
                                     {
-
+                                        char change = Convert.ToChar(Move);
+                                        foreach (var item in G.wordPosition)
+                                        {
+                                            GameWorl[item] = change;
+                                            WinersMove++;
+                                        }
+                                        Console.WriteLine($"you word is: {new String(GameWorl)}");
                                     }
                                     else
                                     {
                                         Console.WriteLine("try again!");
+                                        Console.WriteLine($"you word is: {new String(GameWorl)}");
                                     }
                                 }
                             }
 
-                        } 
+                        }
+                        if (WinersMove >= GameWorl.Length) { Console.WriteLine("you Win!"); break; }
+                        attempts--;
+                        if (attempts == 0) { Console.WriteLine("you lose!"); }
                     }
-
 
                 }
 
