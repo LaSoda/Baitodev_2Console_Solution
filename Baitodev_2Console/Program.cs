@@ -23,6 +23,7 @@ namespace Baitodev_2Console
                 {
                     Console.WriteLine("Insert a valid number of attempts?");
                 }
+                if (attempts <= 0){ attempts = 1; }
 
                 Console.WriteLine("insert a number to play (0-9)");
 
@@ -41,17 +42,34 @@ namespace Baitodev_2Console
                         }
                         Console.WriteLine($"you word is: {new String(GameWorl)}");
                     }
-                    String Move = Console.ReadLine();
-                    var ResultUrl = ($"{WorldUrl}/{Move}");
-                    using (var httpGame = new HttpClient())
-                    {
-                        var Gameresponse = await http.GetStringAsync(ResultUrl);
-                        var GameGet = JsonConvert.DeserializeObject<List<MoveResult>>(response);
-                        foreach (var G in GameGet)
-                        {
-                            if (G.isWin) { Console.WriteLine("you Win!"); }
-                        }
 
+                    while (attempts != 0)
+                    {
+                        if (attempts == 0) { Console.WriteLine("you lose!"); break;  } 
+                        String Move = Console.ReadLine();
+                        attempts--;
+                        var ResultUrl = ($"{WorldUrl}/{Move}");
+                        using (var httpGame = new HttpClient())
+                        {
+                            var Gameresponse = await http.GetStringAsync(ResultUrl);
+                            var GameGet = JsonConvert.DeserializeObject<List<MoveResult>>(Gameresponse);
+                            foreach (var G in GameGet)
+                            {
+                                if (G.isWin) { Console.WriteLine("you Win!"); attempts = 0; }
+                                else
+                                {
+                                    if (G.isCorrect)
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("try again!");
+                                    }
+                                }
+                            }
+
+                        } 
                     }
 
 
