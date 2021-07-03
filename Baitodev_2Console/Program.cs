@@ -51,6 +51,7 @@ namespace Baitodev_2Console
                         {
                             if (G.isWin) { Console.WriteLine("you Win!"); }
                         }
+
                     }
 
 
